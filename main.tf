@@ -86,7 +86,7 @@ resource "aws_db_instance" "mysql" {
 #
 # CloudWatch resources
 resource "aws_cloudwatch_metric_alarm" "database_cpu" {
-  alarm_name          = "Alarm-${var.environment}-DatabaseServerCPUUtilization-${local.db_identifier_prefix}"
+  alarm_name          = "Alarm-${var.environment}-DatabaseServerCPUUtilization-${local.db_identifier_prefix}-${count.index}"
   alarm_description   = "Database server CPU utilization"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "1"
@@ -96,7 +96,7 @@ resource "aws_cloudwatch_metric_alarm" "database_cpu" {
   statistic           = "Average"
   threshold           = "${var.alarm_cpu_threshold}"
 
-  dimensions { DBInstanceIdentifier = "${aws_db_instance.mysql.*.id}" }
+  dimensions { DBInstanceIdentifier = "${element(aws_db_instance.mysql.*.id, 0)}" }
 
   alarm_actions             = ["${var.alarm_actions}"]
   ok_actions                = ["${var.ok_actions}"]
@@ -104,7 +104,7 @@ resource "aws_cloudwatch_metric_alarm" "database_cpu" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "database_disk_queue" {
-  alarm_name          = "Alarm-${var.environment}-DatabaseServerDiskQueueDepth-${local.db_identifier_prefix}"
+  alarm_name          = "Alarm-${var.environment}-DatabaseServerDiskQueueDepth-${local.db_identifier_prefix}-${count.index}"
   alarm_description   = "Database server disk queue depth"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "1"
@@ -114,7 +114,7 @@ resource "aws_cloudwatch_metric_alarm" "database_disk_queue" {
   statistic           = "Average"
   threshold           = "${var.alarm_disk_queue_threshold}"
 
-  dimensions { DBInstanceIdentifier = "${aws_db_instance.mysql.*.id}" }
+  dimensions { DBInstanceIdentifier = "${element(aws_db_instance.mysql.*.id, 0)}" }
 
   alarm_actions             = ["${var.alarm_actions}"]
   ok_actions                = ["${var.ok_actions}"]
@@ -122,7 +122,7 @@ resource "aws_cloudwatch_metric_alarm" "database_disk_queue" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "database_disk_free" {
-  alarm_name          = "Alarm-${var.environment}-DatabaseServerFreeStorageSpace-${local.db_identifier_prefix}"
+  alarm_name          = "Alarm-${var.environment}-DatabaseServerFreeStorageSpace-${local.db_identifier_prefix}-${count.index}"
   alarm_description   = "Database server free storage space"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = "1"
@@ -132,7 +132,7 @@ resource "aws_cloudwatch_metric_alarm" "database_disk_free" {
   statistic           = "Average"
   threshold           = "${var.alarm_free_disk_threshold}"
 
-  dimensions { DBInstanceIdentifier = "${aws_db_instance.mysql.*.id}" }
+  dimensions { DBInstanceIdentifier = "${element(aws_db_instance.mysql.*.id, 0)}" }
 
   alarm_actions             = ["${var.alarm_actions}"]
   ok_actions                = ["${var.ok_actions}"]
@@ -140,7 +140,7 @@ resource "aws_cloudwatch_metric_alarm" "database_disk_free" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "database_memory_free" {
-  alarm_name          = "Alarm-${var.environment}-DatabaseServerFreeableMemory-${local.db_identifier_prefix}"
+  alarm_name          = "Alarm-${var.environment}-DatabaseServerFreeableMemory-${local.db_identifier_prefix}-${count.index}"
   alarm_description   = "Database server freeable memory"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = "1"
@@ -150,7 +150,7 @@ resource "aws_cloudwatch_metric_alarm" "database_memory_free" {
   statistic           = "Average"
   threshold           = "${var.alarm_free_memory_threshold}"
 
-  dimensions { DBInstanceIdentifier = "${aws_db_instance.mysql.*.id}" }
+  dimensions { DBInstanceIdentifier = "${element(aws_db_instance.mysql.*.id, 0)}" }
 
   alarm_actions             = ["${var.alarm_actions}"]
   ok_actions                = ["${var.ok_actions}"]
@@ -160,7 +160,7 @@ resource "aws_cloudwatch_metric_alarm" "database_memory_free" {
 resource "aws_cloudwatch_metric_alarm" "database_cpu_credits" {
   // This results in 1 if instance_class starts with "db.t", 0 otherwise.
   count               = "${substr(var.instance_class, 0, 3) == "db.t" ? 1 : 0}"
-  alarm_name          = "Alarm-${var.environment}-DatabaseCPUCreditBalance-${local.db_identifier_prefix}"
+  alarm_name          = "Alarm-${var.environment}-DatabaseCPUCreditBalance-${local.db_identifier_prefix}-${count.index}"
   alarm_description   = "Database CPU credit balance"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = "1"
@@ -170,7 +170,7 @@ resource "aws_cloudwatch_metric_alarm" "database_cpu_credits" {
   statistic           = "Average"
   threshold           = "${var.alarm_cpu_credit_balance_threshold}"
 
-  dimensions { DBInstanceIdentifier = "${aws_db_instance.mysql.*.id}" }
+  dimensions { DBInstanceIdentifier = "${element(aws_db_instance.mysql.*.id, 0)}" }
 
   alarm_actions             = ["${var.alarm_actions}"]
   ok_actions                = ["${var.ok_actions}"]
