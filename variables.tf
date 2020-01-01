@@ -1,219 +1,224 @@
 variable "instance_count" {
-  type        = "string"
   description = "The number of identical resources to create."
-  default     = "1"
+  type        = number
+  default     = 1
 }
 
 variable "service_name" {
-  type = "string"
   description = "The name of the service this RDS belongs to, this will be part of the database identifier"
+  type        = string
 }
 
 variable "product_domain" {
-  type        = "string"
   description = "The name of the product domain this RDS belongs to"
+  type        = string
 }
 
 variable "environment" {
-  type        = "string"
   description = "The environment this RDS belongs to"
+  type        = string
   default     = "dev"
 }
 
 variable "description" {
-  type        = "string"
   description = "The description of this RDS instance"
+  type        = string
 }
 
 variable "replicate_source_db" {
-  type        = "string"
   description = "The source db of read replica instance"
+  type        = string
   default     = ""
 }
 
 variable "engine_version" {
-  type        = "string"
   description = "The mysql engine version"
+  type        = string
   default     = "5.7"
 }
 
 variable "instance_class" {
-  type        = "string"
   description = "The instance type of the RDS instance"
+  type        = string
 }
 
 variable "username" {
-  type        = "string"
   description = "Username for the master DB user"
+  type        = string
   default     = "root"
 }
 
 variable "port" {
-  type        = "string"
   description = "The port on which the DB accepts connections"
-  default     = "3306"
+  type        = number
+  default     = 3306
 }
 
 variable "allocated_storage" {
-  type        = "string"
   description = "The allocated storage in gigabytes. For read replica, set the same value as master's"
+  type        = string
 }
 variable "storage_type" {
-  type        = "string"
   description = "One of standard (magnetic), gp2 (general purpose SSD), or io1 (provisioned IOPS SSD)"
+  type        = string
   default     = "gp2"
 }
 variable "iops" {
-  type        = "string"
   description = "The amount of provisioned IOPS. Setting this implies a storage_type of io1"
-  default     = "0"
+  type        = number
+  default     = 0
 }
 variable "storage_encrypted" {
-  type        = "string"
   description = "Specifies whether the DB instance is encrypted"
-  default     = "true"
+  type        = bool
+  default     = true
 }
 variable "kms_key_id" {
-  type        = "string"
   description = "Specifies a custom KMS key to be used to encrypt"
+  type        = string
   default     = ""
 }
 
 variable "vpc_security_group_ids" {
-  type        = "list"
   description = "List of VPC security groups to associate"
+  type        = list(string)
 }
 
 variable "db_subnet_group_name" {
-  type        = "string"
   description = "Name of DB subnet group"
+  type        = string
   default     = ""
 }
 
 variable "parameter_group_name" {
-  type        = "string"
   description = "Name of the DB parameter group to associate"
+  type        = string
 }
 
 variable "availability_zone" {
-  type        = "string"
   description = "The AZ for the RDS instance. It is recommended to only use this when creating a read replica instance"
+  type        = string
   default     = ""
 }
 
 variable "multi_az" {
-  type        = "string"
   description = "Specifies if the RDS instance is multi-AZ"
-  default     = "true"
+  type        = bool
+  default     = true
 }
 
 variable "publicly_accessible" {
-  type        = "string"
   description = "Specifies if the RDS instance is public to outside access"
-  default     = "false"
+  type        = bool
+  default     = false
 }
 
 
 variable "allow_major_version_upgrade" {
-  type        = "string"
   description = "Indicates that major version upgrades are allowed"
-  default     = "false"
+  type        = bool
+  default     = false
 }
 
 variable "auto_minor_version_upgrade" {
-  type        = "string"
   description = "Indicates that minor engine upgrades will be applied automatically to the DB instance during the maintenance window"
-  default     = "false"
+  type        = bool
+  default     = false
 }
 
 variable "apply_immediately" {
-  type        = "string"
   description = "Specifies whether any database modifications are applied immediately, or during the next maintenance window"
-  default     = "false"
+  type        = bool
+  default     = false
 }
 
 variable "maintenance_window" {
-  type        = "string"
   description = "The window to perform maintenance in. Syntax: 'ddd:hh24:mi-ddd:hh24:mi'"
+  type        = string
 }
 
 variable "backup_retention_period" {
-  type        = "string"
   description = "The days to retain backups for"
+  type        = number
   default     = 7
 }
 
 variable "backup_window" {
-  type        = "string"
   description = "The daily time range (in UTC) during which automated backups are created if they are enabled. Before and not overlap with maintenance_window"
+  type        = string
   default     = ""
 }
 
 variable "skip_final_snapshot" {
-  type        = "string"
   description = "Determines whether a final DB snapshot is created before the DB instance is deleted"
-  default     = "false"
+  type        = bool
+  default     = false
 }
 
 variable "copy_tags_to_snapshot" {
-  type        = "string"
   description = "On delete, copy all Instance tags to the final snapshot (if final_snapshot_identifier is specified)"
-  default     = "true"
+  type        = bool
+  default     = true
 }
 
 variable "snapshot_identifier" {
-  type        = "string"
   description = "The snapshot ID used to restore the DB instance"
+  type        = string
   default     = ""
 }
 
 variable "monitoring_interval" {
-  type        = "string"
   description = "The interval, in seconds, between points when Enhanced Monitoring metrics are collected for the DB instance"
-  default     = "60"
+  type        = number
+  default     = 60
 }
 
 variable "enhanced_monitoring_arn" {
-  type = "string"
   description = "The ARN for the IAM role that permits RDS to send enhanced monitoring metrics to CloudWatch Logs"
+  type        = string
 }
 
 variable "alarm_cpu_threshold" {
   description = "Database server CPU utilization alarm"
-  default = "75"
+  type        = number
+  default     = 75
 }
 
 variable "alarm_disk_queue_threshold" {
   description = "Database server disk queue depth"
-  default = "10"
+  type        = number
+  default     = 10
 }
 
 variable "alarm_free_disk_threshold" {
   description = "Database server free storage space"
+  type        = number
   # 5GB
-  default = "5000000000"
+  default = 5000000000
 }
 
 variable "alarm_free_memory_threshold" {
   description = "Database server freeable memory"
+  type        = number
   # 128MB
-  default = "128000000"
+  default = 128000000
 }
 
 variable "alarm_cpu_credit_balance_threshold" {
   description = "Database CPU credit balance"
-  default = "30"
+  type        = number
+  default     = 30
 }
 
 variable alarm_actions {
-  type        = "list"
   description = "The list of actions to execute when this alarm transitions into an ALARM state from any other state."
+  type        = list(string)
 }
 variable ok_actions {
-  type        = "list"
   description = "The list of actions to execute when this alarm transitions into an OK state from any other state."
+  type        = list(string)
 }
 variable insufficient_data_actions {
-  type        = "list"
   description = "The list of actions to execute when this alarm transitions into an INSUFFICIENT_DATA state from any other state."
+  type        = list(string)
 }
